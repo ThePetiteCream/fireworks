@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🎆 新年快乐</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;overflow:hidden;height:100vh;font-family:sans-serif}
+canvas{display:block;width:100%;height:100%}
+
+/* 登录界面 */
+.login-overlay{
+  position:fixed;inset:0;z-index:100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,#1a1a3e 0%,#0a0a1a 70%);
+  transition:opacity 0.8s;
+}
+.login-overlay.hidden{opacity:0;pointer-events:none}
+.login-box{
+  text-align:center;padding:40px 50px;
+  background:rgba(255,255,255,0.05);border-radius:24px;
+  border:1px solid rgba(255,215,0,0.2);
+  backdrop-filter:blur(10px);
+}
+.login-title{
+  font-size:48px;margin-bottom:10px;
+  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  font-weight:800;
+}
+.login-sub{color:rgba(255,255,255,0.4);font-size:14px;margin-bottom:24px}
+.login-input{
+  display:block;width:260px;padding:12px 20px;border-radius:30px;
+  border:1px solid rgba(255,215,0,0.3);background:rgba(255,255,255,0.08);
+  color:#fff;font-size:18px;text-align:center;outline:none;
+  transition:border-color 0.3s;
+}
+.login-input:focus{border-color:#ffd700}
+.login-btn{
+  margin-top:16px;padding:12px 40px;border-radius:30px;
+  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  color:#0f0f1a;font-size:18px;font-weight:700;border:none;
+  cursor:pointer;transition:transform 0.2s;
+}
+.login-btn:hover{transform:scale(1.05)}
+.login-btn:active{transform:scale(0.95)}
+
+/* 倒计时 + 祝福 */
+.overlay{
+  position:fixed;left:0;right:0;bottom:60px;z-index:10;
+  text-align:center;pointer-events:none;
+}
+.greeting{
+  font-size:32px;font-weight:800;color:rgba(255,215,0,0.5);
+  margin-bottom:4px;text-shadow:0 0 30px rgba(255,215,0,0.15);
+}
+.ps{
+  font-size:13px;color:rgba(255,255,255,0.15);
+  margin-top:6px;letter-spacing:1px;
+}
+.countdown{
+  font-size:18px;color:rgba(255,255,255,0.3);
+  letter-spacing:2px;margin-top:4px;
+}
+.countdown span{color:rgba(255,215,0,0.4);font-weight:600}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<!-- 登录 -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-title">🎆 新年快乐</div>
+    <div class="login-sub">请输入你的名字</div>
+    <input class="login-input" id="nameInput" placeholder="你的名字..." maxlength="12" autofocus>
+    <button class="login-btn" id="loginBtn">✨ 进入</button>
+  </div>
+</div>
+
+<!-- 倒计时 + 祝福 -->
+<div class="overlay" id="overlay">
+  <div class="greeting" id="greeting"></div>
+  <div class="ps">💡 PS：点击屏幕可放烟花</div>
+  <div class="countdown" id="countdown"></div>
+</div>
+
+<script>
+// ═══════ 登录 ═══════
+const loginOverlay=document.getElementById('loginOverlay');
+const nameInput=document.getElementById('nameInput');
+const loginBtn=document.getElementById('loginBtn');
+const greetingEl=document.getElementById('greeting');
+const countdownEl=document.getElementById('countdown');
+
+function enterSite(){
+  const name=nameInput.value.trim()||'朋友';
+  greetingEl.textContent='🎉 祝 '+name+' 新年快乐！🎉';
+  loginOverlay.classList.add('hidden');
+  // 开始放烟花
+  launch(Math.random()*W*0.6+W*0.2,H+10);
+  launch(Math.random()*W*0.6+W*0.2,H+10);
+  launch(Math.random()*W*0.6+W*0.2,H+10);
+}
+
+loginBtn.addEventListener('click',enterSite);
+nameInput.addEventListener('keydown',function(e){if(e.key==='Enter')enterSite();});
+
+// ═══════ 倒计时 ═══════
+function updateCountdown(){
+  const now=new Date();
+  const year=now.getFullYear();
+  const nextYear=new Date(year+1,0,1);
+  const diff=nextYear-now;
+  
+  if(diff<=0){
+    countdownEl.textContent='🎊 新年快乐！🎊';
+    return;
+  }
+  
+  const days=Math.floor(diff/86400000);
+  const hours=Math.floor((diff%86400000)/3600000);
+  const mins=Math.floor((diff%3600000)/60000);
+  const secs=Math.floor((diff%60000)/1000);
+  
+  countdownEl.innerHTML='距离<span>2027</span>年还有 <span>'+days+'</span> 天 <span>'+String(hours).padStart(2,'0')+'</span>:'+String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0');
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+// ═══════ 烟花 ═══════
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W,H;
+
+function resize(){
+  W=canvas.width=window.innerWidth;
+  H=canvas.height=window.innerHeight;
+}
+window.onresize=resize;resize();
+
+const COLORS={
+  gold:['#ffd700','#ffec8b','#fff3bf','#ffb300'],
+  red:['#ff4444','#ff6b6b','#ff8787','#ffd8d8'],
+  blue:['#339af0','#74c0fc','#4dabf7','#a5d8ff'],
+  green:['#51cf66','#69db7c','#8ce99a','#b2f2bb'],
+  purple:['#cc5de8','#da77f2','#e599f7','#f3d9fa'],
+  pink:['#f06595','#f783ac','#faa2c1','#fcc2d7'],
+  orange:['#ff922b','#ffa94d','#ffc078','#ffe8cc'],
+  cyan:['#20c997','#38d9a9','#63e6be','#96f2d7'],
+};
+const PALETTES=[COLORS.gold,COLORS.red,COLORS.blue,COLORS.green,COLORS.purple,COLORS.pink,COLORS.orange,COLORS.cyan];
+
+let particles=[],rockets=[],stars=[];
+
+// 生成星空
+function initStars(){
+  for(let i=0;i<150;i++){
+    stars.push({
+      x:Math.random()*W,y:Math.random()*H*0.7, // 只在上半部分
+      r:Math.random()*1.5+0.5,
+      a:Math.random()*0.6+0.2, // 透明度
+      twinkle:Math.random()*Math.PI*2, // 闪烁相位
+      speed:Math.random()*0.02+0.005
+    });
+  }
+}
+initStars();
+
+function pickColor(p){return p[Math.floor(Math.random()*p.length)];}
+
+function launch(x,y){
+  const palette=PALETTES[Math.floor(Math.random()*PALETTES.length)];
+  const color=pickColor(palette);
+  const targetY=Math.random()*H*0.25+H*0.08;
+  const speed=H*0.004+Math.random()*H*0.0025;
+  rockets.push({x,y,vx:(Math.random()-0.5)*0.8,vy:-speed,targetY,color,palette,trail:[]});
+}
+
+function explode(x,y,palette,isDouble){
+  const count=isDouble?60:80+Math.floor(Math.random()*60);
+  for(let i=0;i<count;i++){
+    const a=Math.random()*Math.PI*2,s=Math.random()*1.5+0.6;
+    particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:pickColor(palette),size:Math.random()*3+2,life:Math.random()*1+0.8,maxLife:Math.random()*1+0.8,type:'outer'});
+  }
+  for(let i=0;i<Math.floor(count*0.4);i++){const a=Math.random()*Math.PI*2,s=Math.random()*1+0.4;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:'#fff',size:Math.random()*2+1,life:Math.random()*0.8+0.6,maxLife:Math.random()*0.8+0.6,type:'inner'});}
+  if(isDouble){
+    setTimeout(()=>{
+      const c2=pickColor(palette);
+      for(let i=0;i<40;i++){const a=Math.random()*Math.PI*2,s=Math.random()*2+0.5;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:c2,size:2.5,life:0.9,maxLife:0.9,type:'outer'});}
+      for(let i=0;i<20;i++){const a=Math.random()*Math.PI*2,s=Math.random()*1+0.3;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:'#fff',size:1.5,life:0.7,maxLife:0.7,type:'inner'});}
+    },300);
+    setTimeout(()=>{
+      const c3=pickColor(palette);
+      for(let i=0;i<25;i++){const a=Math.random()*Math.PI*2,s=Math.random()*1.8+0.4;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:c3,size:2,life:0.7,maxLife:0.7,type:'outer'});}
+    },600);
+  }else if(Math.random()>0.5){
+    setTimeout(()=>{
+      const c2=pickColor(palette);
+      for(let i=0;i<25;i++){const a=Math.random()*Math.PI*2,s=Math.random()*1.5+0.3;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:c2,size:2,life:0.6,maxLife:0.6,type:'outer'});}
+    },250+Math.random()*200);
+  }
+}
+
+function update(){
+  for(let i=rockets.length-1;i>=0;i--){
+    const r=rockets[i];
+    r.x+=r.vx;r.y+=r.vy;r.vy+=0.015;
+    r.trail.push({x:r.x,y:r.y});
+    if(r.trail.length>12)r.trail.shift();
+    if(r.y<=r.targetY||r.vy>=0||r.y<H*0.05){explode(r.x,r.y,r.palette,Math.random()<0.3);rockets.splice(i,1);}
+  }
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.015;p.vx*=0.998;p.life-=0.008;
+    if(p.life<=0)particles.splice(i,1);
+  }
+}
+
+function draw(){
+  // 半透明覆盖（产生烟花拖尾效果）
+  ctx.fillStyle='rgba(10,10,26,0.1)';ctx.fillRect(0,0,W,H);
+  // 星星（不受拖尾影响，每帧重绘）
+  for(const s of stars){
+    s.twinkle+=s.speed;
+    const alpha=s.a*(0.6+0.4*Math.sin(s.twinkle));
+    ctx.globalAlpha=alpha;
+    ctx.fillStyle='#ffffff';
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  for(const r of rockets){for(let j=0;j<r.trail.length;j++){const a=j/r.trail.length;ctx.beginPath();ctx.arc(r.trail[j].x,r.trail[j].y,a*3+1,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${a*0.6})`;ctx.fill();}}
+  for(const p of particles){
+    const a=p.life/p.maxLife;ctx.globalAlpha=Math.min(a,1);
+    if(p.type==='inner'){ctx.fillStyle='rgba(255,255,255,0.9)';ctx.beginPath();ctx.arc(p.x,p.y,p.size*a*0.8,0,Math.PI*2);ctx.fill();}
+    else{
+      ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size*a,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=a*0.12;ctx.beginPath();ctx.arc(p.x,p.y,p.size*a*3.5,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=a*0.08;ctx.beginPath();ctx.arc(p.x-p.vx*0.5,p.y-p.vy*0.5,p.size*a*0.5,0,Math.PI*2);ctx.fill();
+    }
+  }
+  ctx.globalAlpha=1;
+}
+
+function loop(){update();draw();requestAnimationFrame(loop);}
+loop();
+
+setInterval(()=>{launch(Math.random()*W*0.6+W*0.2,H+10);},1800+Math.random()*3000);
+
+// 点击发射（从底部射向点击位置）
+canvas.onclick=function(e){
+  const tx=e.clientX||e.pageX||W/2;
+  var ty=e.clientY||e.pageY||H/2;
+  if(ty>H*0.8)ty=H*0.4+Math.random()*H*0.15; // 底部20%→抬高到40%-55%（页面中部）
+  const palette=PALETTES[Math.floor(Math.random()*PALETTES.length)];
+  const speed=H*0.002+Math.random()*H*0.0015;
+  rockets.push({x:tx+(Math.random()-0.5)*20,y:H+10,
+    vx:(Math.random()-0.5)*0.5,vy:-speed-2,
+    targetY:ty,color:pickColor(palette),palette,trail:[]});
+};
+canvas.ontouchstart=function(e){
+  var t=e.touches[0];
+  var tx=t.clientX,ty=t.clientY;
+  if(ty>H*0.8)ty=H*0.4+Math.random()*H*0.15;
+  const palette=PALETTES[Math.floor(Math.random()*PALETTES.length)];
+  const speed=H*0.002+Math.random()*H*0.0015;
+  rockets.push({x:tx+(Math.random()-0.5)*20,y:H+10,
+    vx:(Math.random()-0.5)*0.5,vy:-speed-2,
+    targetY:ty,color:pickColor(palette),palette,trail:[]});
+  e.preventDefault();
+};
+</script>
+</body>
+</html>
