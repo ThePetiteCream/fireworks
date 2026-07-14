@@ -6,271 +6,339 @@
 <title>🎆 新年快乐</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a1a;overflow:hidden;height:100vh;font-family:sans-serif}
+body{background:#050510;overflow:hidden;height:100vh;font-family:-apple-system,sans-serif}
 canvas{display:block;width:100%;height:100%}
 
-/* 登录界面 */
 .login-overlay{
   position:fixed;inset:0;z-index:100;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at center,#1a1a3e 0%,#0a0a1a 70%);
+  background:radial-gradient(ellipse at center,#fce4d6 0%,#fdf2e9 70%);
   transition:opacity 0.8s;
 }
 .login-overlay.hidden{opacity:0;pointer-events:none}
 .login-box{
-  text-align:center;padding:40px 50px;
-  background:rgba(255,255,255,0.05);border-radius:24px;
-  border:1px solid rgba(255,215,0,0.2);
-  backdrop-filter:blur(10px);
+  text-align:center;padding:52px 60px;
+  background:rgba(220,220,225,0.5);
+  border-radius:32px;
+  border:1px solid rgba(0,0,0,0.04);
+  backdrop-filter:blur(20px);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 80px rgba(180,120,80,0.04),0 8px 40px rgba(0,0,0,0.03),inset 0 1px 0 rgba(255,255,255,0.3);
 }
+.login-box::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:conic-gradient(from 0deg,transparent,rgba(180,120,80,0.02),transparent,rgba(180,120,80,0.02),transparent);
+  animation:rotateBg 10s linear infinite;
+}
+.login-box::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(180,120,80,0.08),transparent);
+}
+@keyframes rotateBg{100%{transform:rotate(360deg)}}
+.login-inner{position:relative;z-index:1}
+.login-icon{margin-bottom:14px;display:flex;align-items:center;justify-content:center}
+.logo-burst{position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.logo-burst span{position:absolute;width:2px;height:14px;background:rgba(220,180,80,0.3);border-radius:2px;transform-origin:center 20px;animation:burstPulse 2s ease-in-out infinite}
+.logo-burst span:nth-child(1){transform:rotate(0deg);animation-delay:0s}
+.logo-burst span:nth-child(2){transform:rotate(45deg);animation-delay:0.25s}
+.logo-burst span:nth-child(3){transform:rotate(90deg);animation-delay:0.5s}
+.logo-burst span:nth-child(4){transform:rotate(135deg);animation-delay:0.75s}
+.logo-burst span:nth-child(5){transform:rotate(180deg);animation-delay:0s}
+.logo-burst span:nth-child(6){transform:rotate(225deg);animation-delay:0.25s}
+.logo-burst span:nth-child(7){transform:rotate(270deg);animation-delay:0.5s}
+.logo-burst span:nth-child(8){transform:rotate(315deg);animation-delay:0.75s}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:rgba(220,180,80,0.4);z-index:1;animation:dotPulse 2s ease-in-out infinite}
+@keyframes burstPulse{0%,100%{opacity:0.3;height:12px}50%{opacity:0.7;height:18px}}
+@keyframes dotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .login-title{
-  font-size:48px;margin-bottom:10px;
-  background:linear-gradient(135deg,#ffd700,#ff8c00);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  font-weight:800;
+  font-size:36px;margin-bottom:2px;font-weight:700;
+  color:#1d1d1f;letter-spacing:4px;
 }
-.login-sub{color:rgba(255,255,255,0.4);font-size:14px;margin-bottom:24px}
+.login-sub{color:rgba(0,0,0,0.25);font-size:12px;margin-bottom:24px;letter-spacing:3px;font-weight:300}
 .login-input{
   display:block;width:260px;padding:12px 20px;border-radius:30px;
-  border:1px solid rgba(255,215,0,0.3);background:rgba(255,255,255,0.08);
-  color:#fff;font-size:18px;text-align:center;outline:none;
-  transition:border-color 0.3s;
+  border:1px solid rgba(0,0,0,0.06);background:rgba(0,0,0,0.02);
+  color:#1d1d1f;font-size:15px;text-align:center;outline:none;
+  transition:all 0.3s;letter-spacing:1px;
 }
-.login-input:focus{border-color:#ffd700}
+.login-input::placeholder{color:rgba(0,0,0,0.12)}
+.login-input:focus{border-color:rgba(0,0,0,0.12);box-shadow:0 0 20px rgba(0,0,0,0.02);background:rgba(0,0,0,0.03)}
 .login-btn{
-  margin-top:16px;padding:12px 40px;border-radius:30px;
-  background:linear-gradient(135deg,#ffd700,#ff8c00);
-  color:#0f0f1a;font-size:18px;font-weight:700;border:none;
-  cursor:pointer;transition:transform 0.2s;
+  margin-top:16px;padding:12px 44px;border-radius:30px;
+  background:rgba(0,0,0,0.04);
+  color:rgba(0,0,0,0.5);font-size:14px;font-weight:500;border:1px solid rgba(0,0,0,0.06);
+  cursor:pointer;transition:all 0.25s;letter-spacing:3px;
 }
-.login-btn:hover{transform:scale(1.05)}
-.login-btn:active{transform:scale(0.95)}
+.login-btn:hover{background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.7);border-color:rgba(0,0,0,0.1)}
+.login-btn:active{transform:scale(0.96)}
 
-/* 倒计时 + 祝福 */
-.overlay{
-  position:fixed;left:0;right:0;bottom:60px;z-index:10;
-  text-align:center;pointer-events:none;
+.overlay{position:fixed;left:0;right:0;bottom:40px;z-index:10;text-align:center;pointer-events:none}
+.greeting{font-size:26px;font-weight:800;color:rgba(255,215,0,0.4);margin-bottom:3px;text-shadow:0 0 40px rgba(255,215,0,0.08);animation:fadeUp 1s ease-out}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ps{font-size:11px;color:rgba(255,255,255,0.1);margin-top:4px;letter-spacing:3px}
+.from{font-size:12px;color:rgba(255,255,255,0.08);margin-top:1px;font-style:italic;letter-spacing:2px}
+.countdown{font-size:15px;color:rgba(255,255,255,0.2);letter-spacing:3px;margin-top:2px}
+.countdown span{color:rgba(255,215,0,0.3);font-weight:600}
+
+#pauseBtn{
+  position:fixed;right:20px;bottom:20px;z-index:20;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  color:rgba(255,255,255,0.3);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;backdrop-filter:blur(4px);line-height:1;
 }
-.greeting{
-  font-size:32px;font-weight:800;color:rgba(255,215,0,0.5);
-  margin-bottom:4px;text-shadow:0 0 30px rgba(255,215,0,0.15);
-}
-.ps{
-  font-size:13px;color:rgba(255,255,255,0.15);
-  margin-top:6px;letter-spacing:1px;
-}
-.countdown{
-  font-size:18px;color:rgba(255,255,255,0.3);
-  letter-spacing:2px;margin-top:4px;
-}
-.countdown span{color:rgba(255,215,0,0.4);font-weight:600}
+#pauseBtn:hover{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 
-<!-- 登录 -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
-    <div class="login-title">🎆 新年快乐</div>
-    <div class="login-sub">请输入你的名字</div>
-    <input class="login-input" id="nameInput" placeholder="你的名字..." maxlength="12" autofocus>
-    <button class="login-btn" id="loginBtn">✨ 进入</button>
+    <div class="login-inner">
+      <div class="login-icon"><div class="logo-burst"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><div class="logo-dot"></div></div></div>
+      <div class="login-title">新年快乐</div>
+      <div class="login-sub">请输入你的名字</div>
+      <input class="login-input" id="nameInput" placeholder="你的名字..." maxlength="12" autofocus>
+      <button class="login-btn" id="loginBtn">进入</button>
+    </div>
   </div>
 </div>
 
-<!-- 倒计时 + 祝福 -->
 <div class="overlay" id="overlay">
   <div class="greeting" id="greeting"></div>
-  <div class="ps">💡 PS：点击屏幕可放烟花</div>
+  <div class="from">— from 無卅</div>
+  <div class="ps">💡 点击放烟花</div>
   <div class="countdown" id="countdown"></div>
 </div>
 
-<script>
-// ═══════ 登录 ═══════
-const loginOverlay=document.getElementById('loginOverlay');
-const nameInput=document.getElementById('nameInput');
-const loginBtn=document.getElementById('loginBtn');
-const greetingEl=document.getElementById('greeting');
-const countdownEl=document.getElementById('countdown');
+<button id="pauseBtn" onclick="togglePause()">❚❚</button>
 
-function enterSite(){
-  const name=nameInput.value.trim()||'朋友';
-  greetingEl.textContent='🎉 祝 '+name+' 新年快乐！🎉';
-  loginOverlay.classList.add('hidden');
-  // 开始放烟花
-  launch(Math.random()*W*0.6+W*0.2,H+10);
-  launch(Math.random()*W*0.6+W*0.2,H+10);
-  launch(Math.random()*W*0.6+W*0.2,H+10);
+<script>
+const cv=document.getElementById('c'),cx=cv.getContext('2d');
+const _L=document.getElementById('loginOverlay'),_N=document.getElementById('nameInput'),_B=document.getElementById('loginBtn'),_G=document.getElementById('greeting'),_C=document.getElementById('countdown');
+
+let W,H,rockets=[],particles=[],sparks=[],stars=[],paused=false,audioCtx=null;
+
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;makeStars();}
+const palette=[
+  ['#ffd700','#ffec8b','#ffb300','#ffe066'],
+  ['#ff4757','#ff6b81','#ff8a9e'],
+  ['#3498db','#5dade2','#85c1e9'],
+  ['#2ecc71','#58d68d','#82e0aa'],
+  ['#9b59b6','#af7ac5','#c39bd3'],
+  ['#fd79a8','#f8a5c2','#fbc4d4'],
+  ['#e67e22','#f39c12','#f5b041'],
+  ['#1abc9c','#48c9b0','#76d7c4'],
+  ['#fff','#f8f9fa','#e9ecef'],
+];
+
+function makeStars(){
+  stars=[];for(let i=0;i<250;i++)stars.push({x:Math.random()*W,y:Math.random()*H*0.55,r:Math.random()*2+0.3,b:Math.random()*0.6+0.15,p:Math.random()*6.28,s:Math.random()*0.02+0.003});
+}
+function pC(p){return p[Math.floor(Math.random()*p.length)];}
+function rand(a,b){return a+Math.random()*(b-a);}
+
+// 登录
+function enter(){
+  const n=_N.value.trim()||'朋友';
+  _G.textContent='🎉 预祝 '+n+' 新年快乐！🎉';
+  _L.classList.add('hidden');
+  setTimeout(()=>{for(let i=0;i<5;i++)setTimeout(()=>shoot(),i*200);},300);
+}
+_B.addEventListener('click',enter);
+_N.addEventListener('keydown',e=>{if(e.key==='Enter')enter();});
+
+// 倒计时
+function tick(){
+  const n=new Date(),y=n.getFullYear(),t=new Date(y+1,0,1)-n;
+  if(t<=0){_C.textContent='';_G.textContent=_G.textContent.replace('预祝','祝');return;}
+  _C.innerHTML='距离<span>2027</span>年还有 <span>'+Math.floor(t/864e5)+'</span> 天 <span>'+String(Math.floor((t%864e5)/36e5)).padStart(2,'0')+'</span>:'+String(Math.floor((t%36e5)/6e4)).padStart(2,'0')+':'+String(Math.floor((t%6e4)/1e3)).padStart(2,'0');
+}
+setInterval(tick,1000);tick();
+
+// 音效
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();}
+function sndWhoosh(){
+  try{initAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type='sawtooth';o.frequency.setValueAtTime(500,audioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(40,audioCtx.currentTime+0.25);
+    g.gain.setValueAtTime(0.05,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.25);
+    o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+0.25);
+  }catch(e){}
+}
+function sndBoom(){
+  try{initAudio();const c=audioCtx.createBufferSource(),b=audioCtx.createBuffer(1,audioCtx.sampleRate*0.4,audioCtx.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++){const t=i/audioCtx.sampleRate;d[i]=(Math.random()*2-1)*Math.pow(1-t/0.4,4)*(0.2+0.8*Math.sin(t*60));}
+    c.buffer=b;const g=audioCtx.createGain();g.gain.setValueAtTime(0.1,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.4);
+    c.connect(g);g.connect(audioCtx.destination);c.start();
+  }catch(e){}
 }
 
-loginBtn.addEventListener('click',enterSite);
-nameInput.addEventListener('keydown',function(e){if(e.key==='Enter')enterSite();});
-
-// ═══════ 倒计时 ═══════
-function updateCountdown(){
-  const now=new Date();
-  const year=now.getFullYear();
-  const nextYear=new Date(year+1,0,1);
-  const diff=nextYear-now;
-  
-  if(diff<=0){
-    countdownEl.textContent='🎊 新年快乐！🎊';
+// 发射
+function shoot(x,y,clicked){
+  // 上限检查（达到上限时自动和点击都不生成）
+  if(rockets.length>=MAX_ROCKETS){
+    if(clicked)toast('烟花太多了，过会再试试吧');
     return;
   }
+  if(paused&&!clicked)return;
+  const pal=palette[Math.floor(Math.random()*palette.length)];
+  let targetY;
+  if(clicked){
+    // 点击发射：从底部射向点击位置
+    x=x||rand(W*0.2,W*0.8);y=H+10;targetY=arguments[1];
+    if(targetY>H*0.8)targetY=rand(H*0.3,H*0.5);
+  }else{
+    // 自动发射
+    x=x||rand(W*0.15,W*0.85);y=y||H+10;targetY=rand(H*0.06,H*0.25);
+  }
+  const speed=clicked?rand(H*0.003,H*0.005):rand(H*0.004,H*0.007);
+  rockets.push({
+    x,y,vx:rand(-0.3,0.3),vy:-speed-1.5,
+    targetY:targetY,pal:pal,trail:[]
+  });
+  if(!paused)sndWhoosh();
+}
+
+// 粒子
+function burst(x,y,pal,style){
+  if(style===undefined)style=Math.floor(Math.random()*2); // 0-1
+  const n=70+Math.floor(Math.random()*60);
   
-  const days=Math.floor(diff/86400000);
-  const hours=Math.floor((diff%86400000)/3600000);
-  const mins=Math.floor((diff%3600000)/60000);
-  const secs=Math.floor((diff%60000)/1000);
+  // 闪光
+  for(let i=0;i<10;i++){const a=rand(0,6.28),s=rand(3,8);sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:0.35});}
   
-  countdownEl.innerHTML='距离<span>2027</span>年还有 <span>'+days+'</span> 天 <span>'+String(hours).padStart(2,'0')+'</span>:'+String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0');
-}
-setInterval(updateCountdown,1000);
-updateCountdown();
-
-// ═══════ 烟花 ═══════
-const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-let W,H;
-
-function resize(){
-  W=canvas.width=window.innerWidth;
-  H=canvas.height=window.innerHeight;
-}
-window.onresize=resize;resize();
-
-const COLORS={
-  gold:['#ffd700','#ffec8b','#fff3bf','#ffb300'],
-  red:['#ff4444','#ff6b6b','#ff8787','#ffd8d8'],
-  blue:['#339af0','#74c0fc','#4dabf7','#a5d8ff'],
-  green:['#51cf66','#69db7c','#8ce99a','#b2f2bb'],
-  purple:['#cc5de8','#da77f2','#e599f7','#f3d9fa'],
-  pink:['#f06595','#f783ac','#faa2c1','#fcc2d7'],
-  orange:['#ff922b','#ffa94d','#ffc078','#ffe8cc'],
-  cyan:['#20c997','#38d9a9','#63e6be','#96f2d7'],
-};
-const PALETTES=[COLORS.gold,COLORS.red,COLORS.blue,COLORS.green,COLORS.purple,COLORS.pink,COLORS.orange,COLORS.cyan];
-
-let particles=[],rockets=[],stars=[];
-
-// 生成星空
-function initStars(){
-  for(let i=0;i<150;i++){
-    stars.push({
-      x:Math.random()*W,y:Math.random()*H*0.7, // 只在上半部分
-      r:Math.random()*1.5+0.5,
-      a:Math.random()*0.6+0.2, // 透明度
-      twinkle:Math.random()*Math.PI*2, // 闪烁相位
-      speed:Math.random()*0.02+0.005
-    });
+  if(style===0){ // 圆球
+    for(let i=0;i<n;i++){const a=rand(0,6.28),s=rand(0.5,2.5);addP(x,y,Math.cos(a)*s,Math.sin(a)*s,pC(pal),rand(2,4.5),rand(0.6,1.2));}
+    for(let i=0;i<Math.floor(n*0.25);i++){const a=rand(0,6.28),s=rand(0.2,0.8);addP(x,y,Math.cos(a)*s,Math.sin(a)*s,'#fff',rand(1,2),rand(0.3,0.6));}
+  }else if(style===1){ // 散星
+    for(let i=0;i<n;i++){const a=rand(0,6.28),s=rand(0.3,3);addP(x,y,Math.cos(a)*s,Math.sin(a)*s,pC(pal),rand(2,4),rand(0.5,1.2));}
+    for(let i=0;i<25;i++){const a=rand(0,6.28),s=rand(0.15,0.6);addP(x,y,Math.cos(a)*s,Math.sin(a)*s,'#fff',rand(1,2),rand(0.2,0.5));}
+  }
+  
+  if(Math.random()<0.5){
+    setTimeout(()=>{const c2=pC(pal);for(let i=0;i<40+Math.floor(Math.random()*25);i++){const a=rand(0,6.28),s=rand(0.5,2);addP(x,y,Math.cos(a)*s,Math.sin(a)*s,c2,rand(2,4),rand(0.5,1));}},200+rand(0,250));
   }
 }
-initStars();
+function addP(x,y,vx,vy,color,size,life){particles.push({x,y,vx,vy,color,size,life,maxLife:life});}
 
-function pickColor(p){return p[Math.floor(Math.random()*p.length)];}
-
-function launch(x,y){
-  const palette=PALETTES[Math.floor(Math.random()*PALETTES.length)];
-  const color=pickColor(palette);
-  const targetY=Math.random()*H*0.25+H*0.08;
-  const speed=H*0.004+Math.random()*H*0.0025;
-  rockets.push({x,y,vx:(Math.random()-0.5)*0.8,vy:-speed,targetY,color,palette,trail:[]});
-}
-
-function explode(x,y,palette,isDouble){
-  const count=isDouble?60:80+Math.floor(Math.random()*60);
-  for(let i=0;i<count;i++){
-    const a=Math.random()*Math.PI*2,s=Math.random()*1.5+0.6;
-    particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:pickColor(palette),size:Math.random()*3+2,life:Math.random()*1+0.8,maxLife:Math.random()*1+0.8,type:'outer'});
-  }
-  for(let i=0;i<Math.floor(count*0.4);i++){const a=Math.random()*Math.PI*2,s=Math.random()*1+0.4;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:'#fff',size:Math.random()*2+1,life:Math.random()*0.8+0.6,maxLife:Math.random()*0.8+0.6,type:'inner'});}
-  if(isDouble){
-    setTimeout(()=>{
-      const c2=pickColor(palette);
-      for(let i=0;i<40;i++){const a=Math.random()*Math.PI*2,s=Math.random()*2+0.5;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:c2,size:2.5,life:0.9,maxLife:0.9,type:'outer'});}
-      for(let i=0;i<20;i++){const a=Math.random()*Math.PI*2,s=Math.random()*1+0.3;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:'#fff',size:1.5,life:0.7,maxLife:0.7,type:'inner'});}
-    },300);
-    setTimeout(()=>{
-      const c3=pickColor(palette);
-      for(let i=0;i<25;i++){const a=Math.random()*Math.PI*2,s=Math.random()*1.8+0.4;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:c3,size:2,life:0.7,maxLife:0.7,type:'outer'});}
-    },600);
-  }else if(Math.random()>0.5){
-    setTimeout(()=>{
-      const c2=pickColor(palette);
-      for(let i=0;i<25;i++){const a=Math.random()*Math.PI*2,s=Math.random()*1.5+0.3;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color:c2,size:2,life:0.6,maxLife:0.6,type:'outer'});}
-    },250+Math.random()*200);
-  }
-}
-
+// 更新
 function update(){
   for(let i=rockets.length-1;i>=0;i--){
-    const r=rockets[i];
-    r.x+=r.vx;r.y+=r.vy;r.vy+=0.015;
-    r.trail.push({x:r.x,y:r.y});
-    if(r.trail.length>12)r.trail.shift();
-    if(r.y<=r.targetY||r.vy>=0||r.y<H*0.05){explode(r.x,r.y,r.palette,Math.random()<0.3);rockets.splice(i,1);}
-  }
-  for(let i=particles.length-1;i>=0;i--){
-    const p=particles[i];
-    p.x+=p.vx;p.y+=p.vy;p.vy+=0.015;p.vx*=0.998;p.life-=0.008;
-    if(p.life<=0)particles.splice(i,1);
-  }
-}
-
-function draw(){
-  // 半透明覆盖（产生烟花拖尾效果）
-  ctx.fillStyle='rgba(10,10,26,0.1)';ctx.fillRect(0,0,W,H);
-  // 星星（不受拖尾影响，每帧重绘）
-  for(const s of stars){
-    s.twinkle+=s.speed;
-    const alpha=s.a*(0.6+0.4*Math.sin(s.twinkle));
-    ctx.globalAlpha=alpha;
-    ctx.fillStyle='#ffffff';
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fill();
-  }
-  ctx.globalAlpha=1;
-  for(const r of rockets){for(let j=0;j<r.trail.length;j++){const a=j/r.trail.length;ctx.beginPath();ctx.arc(r.trail[j].x,r.trail[j].y,a*3+1,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${a*0.6})`;ctx.fill();}}
-  for(const p of particles){
-    const a=p.life/p.maxLife;ctx.globalAlpha=Math.min(a,1);
-    if(p.type==='inner'){ctx.fillStyle='rgba(255,255,255,0.9)';ctx.beginPath();ctx.arc(p.x,p.y,p.size*a*0.8,0,Math.PI*2);ctx.fill();}
-    else{
-      ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size*a,0,Math.PI*2);ctx.fill();
-      ctx.globalAlpha=a*0.12;ctx.beginPath();ctx.arc(p.x,p.y,p.size*a*3.5,0,Math.PI*2);ctx.fill();
-      ctx.globalAlpha=a*0.08;ctx.beginPath();ctx.arc(p.x-p.vx*0.5,p.y-p.vy*0.5,p.size*a*0.5,0,Math.PI*2);ctx.fill();
+    const r=rockets[i];r.x+=r.vx;r.y+=r.vy;r.vy+=0.012;
+    r.trail.push({x:r.x,y:r.y});if(r.trail.length>15)r.trail.shift();
+    if(r.y<=r.targetY||r.vy>=0||r.y<H*0.03){
+      if(!paused)sndBoom();
+      burst(r.x,r.y,r.pal);
+      rockets.splice(i,1);
     }
   }
-  ctx.globalAlpha=1;
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.01;p.vx*=0.995;p.life-=0.006;
+    if(p.life<=0)particles.splice(i,1);
+  }
+  for(let i=sparks.length-1;i>=0;i--){
+    const s=sparks[i];s.x+=s.vx;s.y+=s.vy;s.vy+=0.02;s.vx*=0.9;s.life-=0.02;
+    if(s.life<=0)sparks.splice(i,1);
+  }
 }
 
-function loop(){update();draw();requestAnimationFrame(loop);}
-loop();
+// 绘制
+function draw(){
+  cx.fillStyle='rgba(5,5,16,0.12)';cx.fillRect(0,0,W,H);
+  
+  // 星星
+  for(const s of stars){
+    s.p+=s.s;const a=s.b*(0.4+0.6*Math.sin(s.p));
+    cx.shadowColor='rgba(255,255,255,0.15)';cx.shadowBlur=s.r*4;
+    cx.globalAlpha=a;cx.fillStyle='#fff';
+    cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.28);cx.fill();
+  }
+  cx.shadowBlur=0;cx.globalAlpha=1;
+  
+  // 火箭拖尾
+  for(const r of rockets){
+    for(let j=0;j<r.trail.length;j++){
+      const a=j/r.trail.length,sz=a*2+0.5;
+      cx.globalAlpha=a*0.3;
+      cx.shadowColor='#ffa500';cx.shadowBlur=sz*4;
+      cx.fillStyle='#ffa500';cx.beginPath();cx.arc(r.trail[j].x,r.trail[j].y,sz,0,6.28);cx.fill();
+      cx.shadowBlur=0;
+      cx.fillStyle='rgba(255,200,80,0.15)';cx.beginPath();cx.arc(r.trail[j].x,r.trail[j].y,sz*3,0,6.28);cx.fill();
+    }
+  }
+  cx.shadowBlur=0;cx.globalAlpha=1;
+  
+  // 粒子
+  for(const p of particles){
+    const a=p.life/p.maxLife;cx.globalAlpha=Math.min(a*1.2,1);
+    const sz=p.size*a;
+    cx.shadowColor=p.color;cx.shadowBlur=sz*6;
+    cx.fillStyle=p.color;cx.beginPath();cx.arc(p.x,p.y,sz,0,6.28);cx.fill();
+    cx.shadowBlur=0;
+    cx.globalAlpha=a*0.1;cx.fillStyle=p.color;
+    cx.beginPath();cx.arc(p.x,p.y,sz*3,0,6.28);cx.fill();
+  }
+  cx.shadowBlur=0;cx.globalAlpha=1;
+  
+  // 闪光
+  for(const s of sparks){
+    cx.globalAlpha=s.life*2;
+    cx.strokeStyle='rgba(255,255,255,0.5)';cx.lineWidth=1.5;
+    cx.beginPath();cx.moveTo(s.x,s.y);cx.lineTo(s.x-s.vx*10,s.y-s.vy*10);cx.stroke();
+  }
+  cx.globalAlpha=1;
+  
+  // 地平线
+  cx.fillStyle='rgba(255,215,0,0.006)';cx.fillRect(0,H-2,W,2);
+}
 
-setInterval(()=>{launch(Math.random()*W*0.6+W*0.2,H+10);},1800+Math.random()*3000);
-
-// 点击发射（从底部射向点击位置）
-canvas.onclick=function(e){
-  const tx=e.clientX||e.pageX||W/2;
-  var ty=e.clientY||e.pageY||H/2;
-  if(ty>H*0.8)ty=H*0.4+Math.random()*H*0.15; // 底部20%→抬高到40%-55%（页面中部）
-  const palette=PALETTES[Math.floor(Math.random()*PALETTES.length)];
-  const speed=H*0.002+Math.random()*H*0.0015;
-  rockets.push({x:tx+(Math.random()-0.5)*20,y:H+10,
-    vx:(Math.random()-0.5)*0.5,vy:-speed-2,
-    targetY:ty,color:pickColor(palette),palette,trail:[]});
+// 点击/触摸
+cv.onclick=function(e){
+  var tx=e.clientX||e.pageX||W/2,ty=e.clientY||e.pageY||H/2;
+  shoot(tx,ty,true);
 };
-canvas.ontouchstart=function(e){
-  var t=e.touches[0];
-  var tx=t.clientX,ty=t.clientY;
-  if(ty>H*0.8)ty=H*0.4+Math.random()*H*0.15;
-  const palette=PALETTES[Math.floor(Math.random()*PALETTES.length)];
-  const speed=H*0.002+Math.random()*H*0.0015;
-  rockets.push({x:tx+(Math.random()-0.5)*20,y:H+10,
-    vx:(Math.random()-0.5)*0.5,vy:-speed-2,
-    targetY:ty,color:pickColor(palette),palette,trail:[]});
+cv.ontouchstart=function(e){
+  var t=e.touches[0],tx=t.clientX,ty=t.clientY;
+  shoot(tx,ty,true);
   e.preventDefault();
 };
+
+// 暂停
+function togglePause(){paused=!paused;document.getElementById('pauseBtn').textContent=paused?'▶':'❚❚';}
+
+// 离开页面时暂停
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden){paused=true;document.getElementById('pauseBtn').textContent='▶';}
+});
+
+// 火箭上限
+const MAX_ROCKETS=10;
+
+// 提示
+function toast(msg){
+  let el=document.getElementById('_t');
+  if(!el){el=document.createElement('div');el.id='_t';document.body.appendChild(el);}
+  el.textContent=msg;
+  el.style.cssText='position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.9);color:#1d1d1f;padding:10px 24px;border-radius:20px;font-size:14px;font-weight:600;z-index:999;opacity:1;transition:opacity.3s;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,0.1)';
+  clearTimeout(el._t);el._t=setTimeout(()=>el.style.opacity='0',2000);
+}
+
+function loop(){if(!paused){update();draw();}requestAnimationFrame(loop);}
+
+// 启动
+resize();
+window.onresize=resize;
+setInterval(()=>shoot(),3500+Math.random()*4000);
+setTimeout(shoot,100);setTimeout(shoot,400);setTimeout(shoot,800);
+
+loop();
 </script>
 </body>
 </html>
